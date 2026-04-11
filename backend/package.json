@@ -1,0 +1,50 @@
+{
+  "name": "project1",
+  "version": "1.0.0",
+  "description": "practice nodejs",
+  "license": "ISC",
+  "author": "MINH",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsx ./src/app.ts",
+    "dev": "tsx watch --clear-screen=false ./src/app.ts",
+    "kill": "powershell -Command \"Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }\""
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.2",
+    "bcrypt": "6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "17.3.1",
+    "ejs": "5.0.1",
+    "express": "5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "2.1.1",
+    "mysql2": "3.19.0",
+    "passport": "0.7.0",
+    "passport-local": "1.0.0",
+    "prisma": "6.19.2",
+    "uuid": "13.0.0",
+    "xlsx": "^0.18.5",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/ejs": "3.1.5",
+    "@types/express": "5.0.6",
+    "@types/multer": "2.1.0",
+    "@types/node": "25.3.5",
+    "@types/passport": "1.0.17",
+    "@types/passport-local": "1.0.38",
+    "@types/uuid": "10.0.0",
+    "tsconfig-paths": "4.2.0",
+    "tsx": "4.21.0"
+  },
+  "prisma": {
+    "seed": "tsx src/config/seed.ts"
+  }
+}

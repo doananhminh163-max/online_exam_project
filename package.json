@@ -1,0 +1,14 @@
+{
+  "name": "online-exam-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "npx concurrently --kill-others \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "install:all": "cd backend && npm install; cd ../frontend && npm install"
+  },
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

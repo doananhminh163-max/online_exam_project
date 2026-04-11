@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int    @id @default(autoincrement())
+  username  String @unique
+  password  String
+  email     String @unique
+  full_name String
+  role      String
+
+  exam_attempts ExamAttempt[]
+
+  @@map("users")
+}
+
+model Exam {
+  id            Int      @id @default(autoincrement())
+  name          String   @unique
+  start_time    DateTime
+  end_time      DateTime
+  duration_mins Int
+  attempts_num  Int      @default(2)
+
+  questions     Question[]
+  exam_attempts ExamAttempt[]
+
+  @@map("exams")
+}
+
+model Question {
+  id       Int     @id @default(autoincrement())
+  exam_id  Int
+  content  String
+  option_a String
+  option_b String
+  option_c String
+  option_d String
+  answer   String
+  explain  String?
+
+  exam Exam @relation(fields: [exam_id], references: [id])
+
+  attempt_details AttemptDetail[]
+
+  @@map("questions")
+}
+
+model ExamAttempt {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  exam_id    Int
+  start_time DateTime
+  end_time   DateTime
+  score      Float    @default(0)
+
+  user User @relation(fields: [user_id], references: [id])
+  exam Exam @relation(fields: [exam_id], references: [id])
+
+  attempt_details AttemptDetail[]
+
+  @@map("exam_attempts")
+}
+
+model AttemptDetail {
+  id          Int      @id @default(autoincrement())
+  attempt_id  Int
+  question_id Int
+  user_answer String?
+  is_correct  Boolean?
+
+  exam_attempt ExamAttempt @relation(fields: [attempt_id], references: [id])
+  question     Question    @relation(fields: [question_id], references: [id])
+
+  @@map("attempt_details")
+}

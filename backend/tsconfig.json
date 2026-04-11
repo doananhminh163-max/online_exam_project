@@ -1,0 +1,40 @@
+{
+    "compilerOptions": {
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "esnext",
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "config/*": [
+                "./src/config/*"
+            ],
+            "controllers/*": [
+                "./src/controllers/*"
+            ],
+            "routes/*": [
+                "./src/routes/*"
+            ],
+            "services/*": [
+                "./src/services/*"
+            ],
+            "views/*": [
+                "./src/views/*"
+            ],
+            "models/*": [
+                "./src/models/*"
+            ],
+            "middleware/*": [
+                "./src/middleware/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*",
+        "types"
+    ]
+}

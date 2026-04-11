@@ -1,0 +1,217 @@
+/* Import Modal Specific Styles */
+.import-modal {
+    width: 90%;
+    max-width: 900px;
+}
+
+.modal-body {
+    padding: 24px 40px;
+}
+
+.modal-footer {
+    margin-top: 12px;
+    padding: 16px 40px 32px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.upload-dropzone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 20px;
+    padding: 40px 24px;
+    text-align: center;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-dropzone:hover {
+    border-color: var(--primary, #4f46e5);
+    background-color: #f1f5f9;
+}
+
+.upload-dropzone.dragging {
+    border-color: var(--primary, #4f46e5);
+    background-color: rgba(79, 70, 229, 0.05);
+    transform: scale(1.02);
+}
+
+.upload-dropzone.has-file {
+    border: 2px solid var(--primary, #4f46e5);
+    background-color: white;
+    cursor: default;
+    padding: 32px 24px;
+}
+
+.upload-icon-wrapper {
+    width: 72px;
+    height: 72px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: var(--primary, #4f46e5);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.dropzone-content h4 {
+    margin: 0 0 8px 0;
+    font-size: 1.25rem;
+    color: #0f172a;
+    font-family: var(--heading);
+}
+
+.dropzone-content p {
+    margin: 0 0 12px 0;
+    color: #475569;
+}
+
+.dropzone-content p strong {
+    color: var(--primary, #4f46e5);
+}
+
+.file-hint {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+/* File Preview State */
+.file-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    animation: scaleUp 0.3s ease;
+}
+
+.file-icon {
+    color: #10b981;
+}
+
+.file-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.file-name {
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.file-size {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.btn-remove-file {
+    margin-top: 12px;
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.95rem;
+    padding: 6px 16px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.btn-remove-file:hover {
+    background: #fee2e2;
+}
+
+/* Template Download Link */
+.template-download {
+    margin-top: 24px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: #475569;
+}
+
+.template-download p {
+    margin: 0;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--primary, #4f46e5);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    padding: 0;
+}
+
+.btn-link:hover {
+    color: #4338ca;
+}
+
+/* Success State */
+.upload-success-state {
+    text-align: center;
+    padding: 20px 0;
+    animation: fadeIn 0.4s ease;
+}
+
+.success-icon-wrapper {
+    margin-bottom: 24px;
+}
+
+.upload-success-state h3 {
+    margin: 0 0 12px 0;
+    font-size: 1.5rem;
+    font-family: var(--heading);
+    color: #0f172a;
+}
+
+.upload-success-state p {
+    color: #475569;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.mt-4 {
+    margin-top: 16px;
+}
+
+/* Base Animations (if not in main CSS) */
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.btn-primary-gradient.uploading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
