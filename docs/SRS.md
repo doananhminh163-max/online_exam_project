@@ -139,9 +139,9 @@ sequenceDiagram
     1. Giảng viên đính kèm / thả file Excel (.xlsx hoặc .csv) đúng format theo form biểu mẫu mẫu và nhấn Upload.
     2. Frontend gửi file Multipart/form-data đến backend.
     3. Hệ thống Backend tiếp nhận, parse framework đọc dữ liệu tuần tự định dạng bảng (từng dòng/row).
-    4. Hệ thống kiểm định Data (Validation): Đối với Question thì cần đủ nội dung, 4 đáp án con, đáp án đúng. Đối với Thí sinh cần đủ full name, email, student id.
-    5. *(Với Thí sinh có nghiệp vụ phụ):* Hệ thống sinh tự động Username dựa theo student id và random password cho từng dòng mới. Lưu vào Database Table `users`. Sau đó gửi Background Job kích hoạt Email tự động thông báo tài khoản tới email của thí sinh.
-    6. Hệ thống thực hiện Insert các dòng vào cơ sở dữ liệu (Table `questions` hoặc `users`).
+    4. Hệ thống kiểm định Data (Validation): Đối với Question thì cần đủ nội dung, 4 đáp án con, đáp án đúng. Đối với Thí sinh cần đủ full name, email, student id (code).
+    5. *(Với Thí sinh có nghiệp vụ phụ):* Hệ thống sinh tự động random password cho từng dòng mới. Lưu vào Database Table `users`. Hệ thống kiểm tra nếu đã tồn tại User có cùng email hoặc code thì bỏ qua bản ghi đó. Sau đó gửi Background Job kích hoạt Email tự động thông báo tài khoản tới email của thí sinh.
+    6. Hệ thống thực hiện Insert tuần tự các dòng vào cơ sở dữ liệu (Table `questions` hoặc `users`).
     7. Hệ thống đếm tổng số dòng thành công và thông báo phản hồi lại phía frontend.
     8. Người dùng nhận thông báo "Import thành công {N} bản ghi".
 *   **Các kịch bản khác (Alternative flows):**
@@ -170,7 +170,7 @@ sequenceDiagram
         B-->>F: HTTP 400 Bad Request kèm mảng Log dòng lỗi
         F-->>T: Hiển thị popup lỗi "File bị sai quy định ở các dòng [...], vui lòng kiểm tra lại"
     else Mọi thứ hợp lệ
-        B->>D: Bulk Insert vào Database (Transactions questions/users)
+        B->>D: Insert tuần tự từng dòng vào Database, check trùng email/code
         D-->>B: Xác nhận insert thành công
         
         opt Nếu Import Thí sinh

@@ -62,7 +62,7 @@ const StudentSidebar: React.FC = () => {
             onClick={() => setShowMenu(!showMenu)}
           >
             <div className="user-info">
-              <span className="user-name">{user?.full_name || user?.username || 'Sinh viên'}</span>
+              <span className="user-name">{user?.full_name || 'Sinh viên'}</span>
               <span className="user-role">{user?.role === 'ADMIN' ? 'Giảng viên' : 'Học sinh'}</span>
             </div>
             <ChevronUp 

@@ -1,4 +1,4 @@
-import { prisma } from '../../config/prisma.config.js';
+import { prisma } from '../../config/db.js';
 
 export const clientExamService = {
   getAvailableExamsForStudent: async () => {

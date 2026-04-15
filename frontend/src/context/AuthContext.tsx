@@ -3,7 +3,6 @@ import api from '../services/api';
 
 interface User {
   id: number;
-  username: string;
   role: string;
   full_name: string;
 }

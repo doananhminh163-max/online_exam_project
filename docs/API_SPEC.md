@@ -44,7 +44,6 @@ All API requests are made to `/api/`. Authentication is required for most endpoi
 ```json
 {
   "id": 1,
-  "username": "admin",
   "role": "admin",
   "full_name": "Admin User"
 }
@@ -92,3 +91,4 @@ All API requests are made to `/api/`. Authentication is required for most endpoi
 ### Get Attempt Result
 - **Endpoint:** `GET /api/student/results/:attemptId`
 - **Description:** Retrieve detailed results for a specific exam attempt.
+ exam attempt.

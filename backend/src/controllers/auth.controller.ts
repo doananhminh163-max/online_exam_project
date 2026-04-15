@@ -7,9 +7,9 @@ const SECRET_KEY = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { identifier, password } = req.body;
+    const { email, password } = req.body;
     
-    const user = await authService.findUserByIdentifier(identifier);
+    const user = await authService.findUserByEmail(email);
 
     if (!user) {
       return res.status(401).json({ message: 'User not found' });
@@ -22,7 +22,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, username: user.username, role: user.role, full_name: user.full_name },
+      { id: user.id, role: user.role, full_name: user.full_name },
       SECRET_KEY,
       { expiresIn: '24h' }
     );
@@ -37,7 +37,6 @@ export const login = async (req: Request, res: Response) => {
       message: 'Login successful',
       user: {
         id: user.id,
-        username: user.username,
         role: user.role,
         full_name: user.full_name
       }

@@ -30,6 +30,7 @@
 - Giảng viên có thể thực hiện CRUD với toàn bộ câu hỏi.
 - Giảng viên tải lên file Excel chứa dữ liệu của toàn bộ thí sinh.
 - Hệ thống tự tạo tài khoản cho thí sinh (username: mã sinh viên; password: random), lưu vào cơ sở dữ liệu người dùng và tài khoản qua email cho thí sinh.
+- Giảng viên có thể thực hiện CRUD đối với dữ liệu thí sinh nếu được yêu cầu.
 - Giảng viên có thể xem thông tin và điểm số của thí sinh nhưng không được phép sửa xoá.
 - Sau khi môn thi môn thi kết thúc, hệ thống tạo bảng thống kê xếp hạng thí sinh dựa theo điểm số và thời gian làm bài.
 

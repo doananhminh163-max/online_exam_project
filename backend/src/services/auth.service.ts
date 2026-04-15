@@ -1,13 +1,10 @@
-import { prisma } from '../config/prisma.config.js';
+import { prisma } from '../config/db.js';
 
 export const authService = {
-  findUserByIdentifier: async (identifier: string) => {
-    return await prisma.user.findFirst({
+  findUserByEmail: async (email: string) => {
+    return await prisma.user.findUnique({
       where: {
-        OR: [
-          { email: identifier },
-          { username: identifier }
-        ]
+        email: email
       },
     });
   }

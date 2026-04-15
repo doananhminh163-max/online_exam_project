@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import TeacherDashboard from './pages/teacher-dashboard/TeacherDashboard';
 import TeacherExamManagement from './pages/teacher-exam/TeacherExamManagement';
+import TeacherStudentManagement from './pages/teacher-student/TeacherStudentManagement';
 import Login from './pages/login/Login';
 import StudentDashboard from './pages/student-dashboard/StudentDashboard';
 import TakeExam from './pages/student-exam/TakeExam';
@@ -37,6 +38,7 @@ function App() {
           <Route element={<ProtectedRoute allowedRole="ADMIN" />}>
             <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
             <Route path="/teacher/exams" element={<TeacherExamManagement />} />
+            <Route path="/teacher/students" element={<TeacherStudentManagement />} />
           </Route>
 
           {/* Student Routes */}

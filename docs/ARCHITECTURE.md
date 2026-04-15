@@ -55,12 +55,12 @@ graph TD
 - **Architectural Pattern:** MVC-like structure.
     - **Routes:** Define API endpoints and apply middleware.
     - **Controllers:** Handle incoming requests, validate input, and call services.
-    - **Middleware:** Auth (JWT verification), Validation, and Multer for file uploads.
+    - **Middleware:** Auth (JWT verification), Cookie Parser (for HTTP-Only sessions), Validation, and Multer for file uploads.
 - **Database:** SQLite for local development and simplicity.
 
 ## Database Schema
 The system uses the following core models (managed by Prisma):
-- **User:** Stores user credentials (username, password, email), roles (Admin/Student), and full name.
+- **User:** Stores user credentials (email, code, password), roles (Admin/Student), and full name.
 - **Exam:** Stores exam metadata (title, start/end time, duration, max attempts).
 - **Question:** Multiple-choice questions linked to an exam.
 - **ExamAttempt:** Records a student's attempt at an exam, including score and timing.

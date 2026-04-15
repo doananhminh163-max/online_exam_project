@@ -1,4 +1,4 @@
-import { prisma } from '../../config/prisma.config.js';
+import { prisma } from '../../config/db.js';
 
 export const examService = {
   getAllExams: async () => {
@@ -33,8 +33,34 @@ export const examService = {
   },
 
   deleteExamRecord: async (id: number) => {
-    return await prisma.exam.delete({
-      where: { id }
+    // 1. Tìm tất cả các Lượt làm bài (ExamAttempt) của Môn thi này
+    const attempts = await prisma.examAttempt.findMany({
+      where: { exam_id: id },
+      select: { id: true }
     });
+    const attemptIds = attempts.map(a => a.id);
+
+    // 2. Sử dụng Transaction để xoá các bản ghi phụ thuộc theo thứ tự từ dưới lên
+    return await prisma.$transaction([
+      // Xoá Chi tiết làm bài (nếu có lượt làm bài nào)
+      prisma.attemptDetail.deleteMany({
+        where: { attempt_id: { in: attemptIds } }
+      }),
+      
+      // Xoá Lượt làm bài
+      prisma.examAttempt.deleteMany({
+        where: { exam_id: id }
+      }),
+      
+      // Xoá Ngân hàng Câu hỏi thuộc Môn thi
+      prisma.question.deleteMany({
+        where: { exam_id: id }
+      }),
+      
+      // Cuối cùng: Xoá Môn thi chính
+      prisma.exam.delete({
+        where: { id }
+      })
+    ]);
   }
 };

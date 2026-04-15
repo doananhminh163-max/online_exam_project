@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BookOpen, Users, Database, Activity, TrendingUp, User, LogOut, ChevronUp } from 'lucide-react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -29,7 +29,7 @@ const TeacherSidebar: React.FC = () => {
           <li className={isActive('/teacher/dashboard')}><Link to="/teacher/dashboard"><Activity size={20}/> <span>Tổng quan</span></Link></li>
           <li className={isActive('/teacher/exams')}><Link to="/teacher/exams"><BookOpen size={20}/> <span>Quản lý Môn thi</span></Link></li>
           <li className={isActive('/teacher/questions')}><Link to="/teacher/questions"><Database size={20}/> <span>Ngân hàng câu hỏi</span></Link></li>
-          <li><Link to="#students"><Users size={20}/> <span>Thí sinh</span></Link></li>
+          <li className={isActive('/teacher/students')}><Link to="/teacher/students"><Users size={20}/> <span>Thí sinh</span></Link></li>
           <li><Link to="#reports"><TrendingUp size={20}/> <span>Báo cáo & Thống kê</span></Link></li>
         </ul>
       </nav>
@@ -52,7 +52,7 @@ const TeacherSidebar: React.FC = () => {
             onClick={() => setShowMenu(!showMenu)}
           >
             <div className="user-info">
-              <span className="user-name">{user?.full_name || user?.username || 'Giảng viên'}</span>
+              <span className="user-name">{user?.full_name || 'Giảng viên'}</span>
             </div>
             <ChevronUp 
               size={18} 

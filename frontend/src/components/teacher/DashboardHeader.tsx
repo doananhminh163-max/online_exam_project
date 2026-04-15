@@ -1,5 +1,4 @@
 import React from 'react';
-import { Plus } from 'lucide-react';
 
 interface DashboardHeaderProps {
   // onCreateClick: () => void; (Removed as per user request)

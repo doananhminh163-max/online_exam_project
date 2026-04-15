@@ -11,6 +11,7 @@ dist/
 build/
 .next/
 out/
+*.tsbuildinfo
 
 # Environment Variables
 .env
@@ -30,6 +31,7 @@ out/
 *.swp
 *.swo
 .DS_Store
+Thumbs.db
 
 # Logs
 npm-debug.log*
@@ -40,3 +42,15 @@ yarn-error.log*
 # Prisma
 backend/prisma/*.db
 backend/prisma/*.db-journal
+backend/prisma/migrations_lock.toml
+
+# CLI
+.gemini/
+.github/
+
+# Vite
+.vite/
+
+# Temporary files
+tmp/
+C:\Users\Admin\.gemini\tmp\online-exam-project

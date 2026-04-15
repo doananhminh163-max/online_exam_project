@@ -9,6 +9,7 @@
     "install:all": "cd backend && npm install; cd ../frontend && npm install"
   },
   "dependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "prebuild-install": "^7.1.3"
   }
 }

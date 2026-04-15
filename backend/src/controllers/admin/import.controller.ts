@@ -1,35 +1,7 @@
 import { Request, Response } from 'express';
 import xlsx from 'xlsx';
-import { prisma } from '../../config/prisma.config.js';
+import { prisma } from '../../config/db.js';
 import bcrypt from 'bcrypt';
-
-// Helper to remove diacritics and special characters for username generation
-const removeVietnameseTones = (str: string) => {
-    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
-    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
-    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
-    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
-    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
-    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
-    str = str.replace(/đ/g, "d");
-    str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
-    str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
-    str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
-    str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
-    str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
-    str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
-    str = str.replace(/Đ/g, "D");
-    str = str.replace(/[^a-zA-Z0-9 ]/g, "");
-    return str;
-};
-
-const generateUsername = (fullName: string, studentId: string) => {
-    const unsign = removeVietnameseTones(fullName).toLowerCase();
-    const parts = unsign.split(' ');
-    const lastName = parts.pop() || '';
-    const initials = parts.map(p => p.charAt(0)).join('');
-    return `${lastName}${initials}${studentId || ''}`.replace(/\s+/g, '');
-};
 
 const generateRandomPassword = () => {
     return Math.random().toString(36).slice(-8); // Random 8 chars
@@ -41,7 +13,14 @@ export const importStudents = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'Vui lòng chọn file' });
         }
 
-        const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+        let workbook;
+        if (req.file.originalname.toLowerCase().endsWith('.csv')) {
+            const csvString = req.file.buffer.toString('utf8');
+            workbook = xlsx.read(csvString, { type: 'string' });
+        } else {
+            workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+        }
+
         const sheetName = workbook.SheetNames[0];
         const data = xlsx.utils.sheet_to_json<any>(workbook.Sheets[sheetName]);
 
@@ -50,25 +29,24 @@ export const importStudents = async (req: Request, res: Response) => {
 
         for (let i = 0; i < data.length; i++) {
             const row = data[i];
-            const fullName = row['Full Name'] || row['Họ và tên'] || row['full_name'];
-            let email = row['Email'] || row['email'];
-            const studentId = row['Student ID'] || row['Mã SV'] || row['student_id'] || '';
+            const fullName = row['Full Name'];
+            let email = row['Email'];
+            const studentCode = row['Student Code'] || '';
 
             // Standardize columns
-            const username = row['Username'] || row['username'] || generateUsername(fullName || '', studentId);
-            const password = row['Password'] || row['Mật khẩu'] || row['password'] || generateRandomPassword();
+            const password = generateRandomPassword();
 
-            if (!fullName || !email) {
-                errors.push({ row: i + 2, reason: 'Thiếu Full Name hoặc Email' });
+            if (!fullName || !email || !studentCode) {
+                errors.push({ row: i + 2, reason: 'Thiếu Full Name, Email hoặc Mã SV (Code)' });
                 continue;
             }
 
             studentsToInsert.push({
-                username: username.toString(),
+                code: studentCode.toString(),
                 password: password.toString(),
                 email: email.toString(),
                 full_name: fullName.toString(),
-                role: 'student'
+                role: 'STUDENT'
             });
         }
 
@@ -86,12 +64,12 @@ export const importStudents = async (req: Request, res: Response) => {
         let successCount = 0;
         try {
             for (const student of hashedStudents) {
-                // Check if user exists by email or username
+                // Check if user exists by email
                 const existingUser = await prisma.user.findFirst({
                     where: {
                         OR: [
                             { email: student.email },
-                            { username: student.username }
+                            { code: student.code }
                         ]
                     }
                 });
@@ -102,15 +80,15 @@ export const importStudents = async (req: Request, res: Response) => {
                     });
                     successCount++;
                 } else {
-                     console.warn(`Skipping student import: Username ${student.username} or Email ${student.email} already exists.`);
+                    console.warn(`Skipping student import: Email ${student.email} or Code ${student.code} already exists.`);
                 }
             }
         } catch (dbError) {
-             return res.status(500).json({ message: 'Lỗi khi import vào database', error: dbError });
+            return res.status(500).json({ message: 'Lỗi khi import vào database', error: dbError });
         }
 
         // Background Job for emails omitted
-        
+
         return res.status(201).json({ message: 'Import thành công', count: successCount, total: studentsToInsert.length });
 
     } catch (error) {
@@ -130,7 +108,7 @@ export const importQuestions = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'Vui lòng chọn Môn thi hợp lệ' });
         }
 
-        const exam = await prisma.exam.findUnique({ where: { id: examId }});
+        const exam = await prisma.exam.findUnique({ where: { id: examId } });
         if (!exam) {
             return res.status(404).json({ message: 'Không tìm thấy Môn thi' });
         }

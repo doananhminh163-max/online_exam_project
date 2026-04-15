@@ -8,7 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [identifier, setIdentifier] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -19,7 +19,7 @@ export const Login: React.FC = () => {
     setError('');
     
     try {
-      const response = await api.post('/login', { identifier, password });
+      const response = await api.post('/login', { email, password });
       const { user } = response.data;
       
       login(user);
@@ -72,14 +72,14 @@ export const Login: React.FC = () => {
             <form onSubmit={handleLogin} className="login-form">
               {error && <div className="login-error-alert">{error}</div>}
               <div className="form-group">
-                <label>Email / Tên đăng nhập</label>
+                <label>Email</label>
                 <div className="input-wrapper">
                   <Mail className="input-icon" size={20} />
                   <input 
-                    type="text" 
-                    value={identifier}
-                    onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="Email hoặc tên đăng nhập"
+                    type="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email của bạn"
                     required
                     disabled={loading}
                   />

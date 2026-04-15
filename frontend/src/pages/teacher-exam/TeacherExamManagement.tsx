@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TeacherSidebar from '../../components/teacher/TeacherSidebar';
-import { Plus, Edit, Trash2, Calendar, Clock, BookOpen, Shield, HelpCircle, X } from 'lucide-react';
+import { Plus, Edit, Trash2, Calendar, Clock, BookOpen, Shield, X } from 'lucide-react';
 import api from '../../services/api';
 import './TeacherExamManagement.css';
 
