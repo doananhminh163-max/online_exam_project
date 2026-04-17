@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import xlsx from 'xlsx';
 import { prisma } from '../../config/db.js';
 import bcrypt from 'bcrypt';
+import { sendBulkPasswordEmails } from '../../services/email.service.js';
 
 const generateRandomPassword = () => {
     return Math.random().toString(36).slice(-8); // Random 8 chars
@@ -54,14 +55,22 @@ export const importStudents = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'Tệp chứa dữ liệu không hợp lệ', errors });
         }
 
+        // Lưu mật khẩu plaintext trước khi hash để gửi email
+        const plaintextPasswords = new Map<string, string>();
+        for (const student of studentsToInsert) {
+            plaintextPasswords.set(student.email, student.password);
+        }
+
         // Hash passwords
         const hashedStudents = await Promise.all(studentsToInsert.map(async (student) => ({
             ...student,
             password: await bcrypt.hash(student.password, 10)
         })));
 
-        // Insert to DB
+        // Insert to DB — theo dõi thí sinh mới để gửi email
         let successCount = 0;
+        const newStudentsForEmail: { email: string; full_name: string; password: string; code: string }[] = [];
+
         try {
             for (const student of hashedStudents) {
                 // Check if user exists by email
@@ -79,6 +88,14 @@ export const importStudents = async (req: Request, res: Response) => {
                         data: student
                     });
                     successCount++;
+
+                    // Lưu thông tin thí sinh mới để gửi email (dùng mật khẩu plaintext)
+                    newStudentsForEmail.push({
+                        email: student.email,
+                        full_name: student.full_name,
+                        password: plaintextPasswords.get(student.email)!,
+                        code: student.code,
+                    });
                 } else {
                     console.warn(`Skipping student import: Email ${student.email} or Code ${student.code} already exists.`);
                 }
@@ -87,9 +104,19 @@ export const importStudents = async (req: Request, res: Response) => {
             return res.status(500).json({ message: 'Lỗi khi import vào database', error: dbError });
         }
 
-        // Background Job for emails omitted
+        // Gửi email mật khẩu cho thí sinh mới (chạy bất đồng bộ, không block response)
+        if (newStudentsForEmail.length > 0) {
+            sendBulkPasswordEmails(newStudentsForEmail).catch((err) => {
+                console.error('[Email] Lỗi khi gửi email hàng loạt:', err);
+            });
+        }
 
-        return res.status(201).json({ message: 'Import thành công', count: successCount, total: studentsToInsert.length });
+        return res.status(201).json({
+            message: 'Import thành công',
+            count: successCount,
+            total: studentsToInsert.length,
+            emailsSending: newStudentsForEmail.length > 0,
+        });
 
     } catch (error) {
         console.error(error);

@@ -33,7 +33,7 @@ const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, type }) => {
   if (!isOpen) return null;
 
   const title = type === 'questions' ? 'Nhập Ngân Hàng Câu Hỏi' : 'Nhập Danh Sách Sinh Viên';
-  const subtitle = type === 'questions' 
+  const subtitle = type === 'questions'
     ? 'Tải lên danh sách câu hỏi trắc nghiệm dưới dạng Excel (.xlsx) hoặc CSV.'
     : 'Tải lên danh sách tài khoản sinh viên dưới dạng Excel (.xlsx) hoặc CSV.';
 
@@ -70,7 +70,7 @@ const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, type }) => {
       setErrorMsg('Vui lòng chọn môn thi');
       return;
     }
-    
+
     setUploading(true);
     setStatus('idle');
     setErrorMsg('');
@@ -93,9 +93,9 @@ const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, type }) => {
       setStatus('error');
       const errRes = error.response?.data;
       if (errRes?.errors) {
-         setErrorMsg(`File bị lỗi ở dòng: ${errRes.errors.map((e: any) => e.row).join(', ')}`);
+        setErrorMsg(`File bị lỗi ở dòng: ${errRes.errors.map((e: any) => e.row).join(', ')}`);
       } else {
-         setErrorMsg(errRes?.message || 'Lỗi hệ thống khi tải lên file');
+        setErrorMsg(errRes?.message || 'Lỗi hệ thống khi tải lên file');
       }
     } finally {
       setUploading(false);
@@ -135,48 +135,53 @@ const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, type }) => {
               <h3>Import Thành Công!</h3>
               <p>Dữ liệu từ tệp <strong>{file?.name}</strong> đã được đồng bộ vào hệ thống.</p>
               <p className="mt-2 text-primary font-bold">Đã import {successCount} bản ghi thành công!</p>
+              {type === 'students' && successCount > 0 && (
+                <p style={{ marginTop: '12px', color: '#16a34a', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                  ✉️ Mật khẩu đăng nhập đang được gửi qua email cho thí sinh.
+                </p>
+              )}
               <button className="btn-primary-gradient mt-6" onClick={handleClose}>Hoàn tất</button>
             </div>
           ) : (
             <>
               {errorMsg && (
                 <div className="error-alert mb-4 flex items-center gap-2 text-red-600 bg-red-50 p-4 rounded-xl border border-red-100">
-                   <AlertCircle size={20} /> <span>{errorMsg}</span>
+                  <AlertCircle size={20} /> <span>{errorMsg}</span>
                 </div>
               )}
 
               {type === 'questions' && (
                 <div className="form-group mb-5">
-                   <label>Chọn Môn thi đích <span className="text-danger">*</span></label>
-                   <select 
-                      className="premium-select" 
-                      value={selectedExamId} 
-                      onChange={(e) => setSelectedExamId(e.target.value)}
-                      style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', fontSize: '0.95rem' }}
-                   >
-                     {exams.length === 0 && <option value="">Không có môn thi nào</option>}
-                     {exams.map(exam => (
-                       <option key={exam.id} value={exam.id}>{exam.name} (ID: {exam.id})</option>
-                     ))}
-                   </select>
+                  <label>Chọn Môn thi đích <span className="text-danger">*</span></label>
+                  <select
+                    className="premium-select"
+                    value={selectedExamId}
+                    onChange={(e) => setSelectedExamId(e.target.value)}
+                    style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', fontSize: '0.95rem' }}
+                  >
+                    {exams.length === 0 && <option value="">Không có môn thi nào</option>}
+                    {exams.map(exam => (
+                      <option key={exam.id} value={exam.id}>{exam.name} (ID: {exam.id})</option>
+                    ))}
+                  </select>
                 </div>
               )}
 
-              <div 
+              <div
                 className={`upload-dropzone ${isDragging ? 'dragging' : ''} ${file ? 'has-file' : ''}`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => !file && fileInputRef.current?.click()}
               >
-                <input 
-                  type="file" 
-                  accept=".xlsx, .xls, .csv" 
-                  style={{ display: 'none' }} 
+                <input
+                  type="file"
+                  accept=".xlsx, .xls, .csv"
+                  style={{ display: 'none' }}
                   ref={fileInputRef}
                   onChange={handleFileSelect}
                 />
-                
+
                 {file ? (
                   <div className="file-preview">
                     <FileSpreadsheet size={48} className="file-icon" />
@@ -203,9 +208,9 @@ const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, type }) => {
               <div className="template-download">
                 <p>Bạn chưa có tệp mẫu?</p>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <a href={csvLink} download className="btn-link">Tải tệp CSV mẫu tại đây</a>
-                    <span style={{ color: '#64748b' }}>hoặc</span>
-                    <a href={excelLink} download className="btn-link">Tải tệp Excel mẫu tại đây</a>
+                  <a href={csvLink} download className="btn-link">Tải tệp CSV mẫu tại đây</a>
+                  <span style={{ color: '#64748b' }}>hoặc</span>
+                  <a href={excelLink} download className="btn-link">Tải tệp Excel mẫu tại đây</a>
                 </div>
               </div>
             </>
@@ -217,9 +222,9 @@ const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, type }) => {
             <button type="button" className="btn-secondary-flat" onClick={handleClose} disabled={uploading}>
               Hủy bỏ
             </button>
-            <button 
-              type="button" 
-              className={`btn-primary-gradient ${uploading ? 'uploading' : ''}`} 
+            <button
+              type="button"
+              className={`btn-primary-gradient ${uploading ? 'uploading' : ''}`}
               onClick={handleUploadClick}
               disabled={!file || uploading}
             >

@@ -119,7 +119,6 @@ export const TeacherExamManagement: React.FC = () => {
                 <div className="page-header">
                     <div className="header-title">
                         <h1>Quản lý Môn thi</h1>
-                        <p>Danh sách và cấu hình các bài thi trong hệ thống</p>
                     </div>
                     <button className="btn-primary" onClick={() => handleOpenModal()}>
                         <Plus size={18} />
@@ -135,13 +134,12 @@ export const TeacherExamManagement: React.FC = () => {
                             <table className="data-table">
                                 <thead>
                                     <tr>
-                                        <th>Tên Môn thi</th>
-                                        <th>Thời gian</th>
-                                        <th>Thời lượng</th>
+                                        <th>TÊN MÔN THI</th>
+                                        <th>THỜI GIAN</th>
+                                        <th>THỜI LƯỢNG</th>
                                         <th>SỐ CÂU</th>
-                                        <th>Lượt tham gia</th>
-                                        <th>Lượt làm bài (tối đa)</th>
-                                        <th className="action-col">Thao tác</th>
+                                        <th>SỐ LẦN LÀM</th>
+                                        <th className="action-col">THAO TÁC</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -161,12 +159,7 @@ export const TeacherExamManagement: React.FC = () => {
                                                 </td>
                                                 <td><Clock size={14} className="inline-icon" /> {exam.duration_mins} phút</td>
                                                 <td><BookOpen size={14} className="inline-icon" /> {exam.questions_num} câu</td>
-                                                <td className="participation-cell">
-                                                    <span className="participation-badge">
-                                                        {exam.participants ?? 0} lượt
-                                                    </span>
-                                                </td>
-                                                <td>{exam.attempts_num} lần</td>
+                                                <td className="text-center">{exam.attempts_num} lần</td>
                                                 <td>
                                                     <div className="action-buttons">
                                                         <button className="btn-icon edit" onClick={() => handleOpenModal(exam)}>
@@ -206,17 +199,17 @@ export const TeacherExamManagement: React.FC = () => {
                                         <label>Tên môn thi <span className="text-danger">*</span></label>
                                         <div className="premium-input-wrapper">
                                             <BookOpen size={20} className="input-icon" />
-                                            <input 
-                                                type="text" 
-                                                name="name" 
+                                            <input
+                                                type="text"
+                                                name="name"
                                                 placeholder="Ví dụ: Kiểm tra Giữa kỳ II - Lập trình Java"
-                                                value={formData.name} 
-                                                onChange={handleInputChange} 
-                                                required 
+                                                value={formData.name}
+                                                onChange={handleInputChange}
+                                                required
                                             />
                                         </div>
                                     </div>
-                                    
+
                                     <div className="form-grid-2">
                                         <div className="form-group">
                                             <label>Thời gian mở bài <span className="text-danger">*</span></label>
@@ -256,7 +249,7 @@ export const TeacherExamManagement: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="modal-footer">
                                 <button type="button" className="btn-secondary-flat" onClick={() => setIsModalOpen(false)}>Hủy bỏ</button>
                                 <button type="submit" className="btn-primary-gradient">
