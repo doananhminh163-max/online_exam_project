@@ -86,7 +86,7 @@ const RecentExams: React.FC = () => {
                                 {statusInfo.label}
                                 </span>
                             </td>
-                            <td>{exam.participants && exam.participants > 0 ? exam.participants : '-'}</td>
+                            <td>{typeof exam.participants === 'number' ? exam.participants : '-'}</td>
                             </tr>
                         );
                     })

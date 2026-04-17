@@ -12,6 +12,7 @@ interface Exam {
     duration_mins: number;
     attempts_num: number;
     questions_num: number;
+    participants?: number;
 }
 
 export const TeacherExamManagement: React.FC = () => {
@@ -138,7 +139,8 @@ export const TeacherExamManagement: React.FC = () => {
                                         <th>Thời gian</th>
                                         <th>Thời lượng</th>
                                         <th>SỐ CÂU</th>
-                                        <th>Lượt làm bài</th>
+                                        <th>Lượt tham gia</th>
+                                        <th>Lượt làm bài (tối đa)</th>
                                         <th className="action-col">Thao tác</th>
                                     </tr>
                                 </thead>
@@ -159,6 +161,11 @@ export const TeacherExamManagement: React.FC = () => {
                                                 </td>
                                                 <td><Clock size={14} className="inline-icon" /> {exam.duration_mins} phút</td>
                                                 <td><BookOpen size={14} className="inline-icon" /> {exam.questions_num} câu</td>
+                                                <td className="participation-cell">
+                                                    <span className="participation-badge">
+                                                        {exam.participants ?? 0} lượt
+                                                    </span>
+                                                </td>
                                                 <td>{exam.attempts_num} lần</td>
                                                 <td>
                                                     <div className="action-buttons">
@@ -193,56 +200,58 @@ export const TeacherExamManagement: React.FC = () => {
                             </button>
                         </div>
                         <form className="modal-form" onSubmit={handleSubmit}>
-                            <div className="form-sections">
-                                <div className="form-group full-width">
-                                    <label>Tên môn thi <span className="text-danger">*</span></label>
-                                    <div className="premium-input-wrapper">
-                                        <BookOpen size={20} className="input-icon" />
-                                        <input 
-                                            type="text" 
-                                            name="name" 
-                                            placeholder="Ví dụ: Kiểm tra Giữa kỳ II - Lập trình Java"
-                                            value={formData.name} 
-                                            onChange={handleInputChange} 
-                                            required 
-                                        />
-                                    </div>
-                                </div>
-                                
-                                <div className="form-grid-2">
-                                    <div className="form-group">
-                                        <label>Thời gian mở bài <span className="text-danger">*</span></label>
-                                        <div className="premium-input-wrapper">
-                                            <Calendar size={20} className="input-icon" />
-                                            <input type="datetime-local" name="start_time" value={formData.start_time} onChange={handleInputChange} required />
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Thời gian đóng bài <span className="text-danger">*</span></label>
-                                        <div className="premium-input-wrapper">
-                                            <Calendar size={20} className="input-icon" />
-                                            <input type="datetime-local" name="end_time" value={formData.end_time} onChange={handleInputChange} required />
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Thời lượng (phút) <span className="text-danger">*</span></label>
-                                        <div className="premium-input-wrapper">
-                                            <Clock size={20} className="input-icon" />
-                                            <input type="number" name="duration_mins" value={formData.duration_mins} onChange={handleInputChange} min="1" required />
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Số lần làm tối đa <span className="text-danger">*</span></label>
-                                        <div className="premium-input-wrapper">
-                                            <Shield size={20} className="input-icon" />
-                                            <input type="number" name="attempts_num" value={formData.attempts_num} onChange={handleInputChange} min="1" required />
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Số lượng câu hỏi <span className="text-danger">*</span></label>
+                            <div className="modal-body">
+                                <div className="form-sections">
+                                    <div className="form-group full-width">
+                                        <label>Tên môn thi <span className="text-danger">*</span></label>
                                         <div className="premium-input-wrapper">
                                             <BookOpen size={20} className="input-icon" />
-                                            <input type="number" name="questions_num" value={formData.questions_num} onChange={handleInputChange} min="0" required />
+                                            <input 
+                                                type="text" 
+                                                name="name" 
+                                                placeholder="Ví dụ: Kiểm tra Giữa kỳ II - Lập trình Java"
+                                                value={formData.name} 
+                                                onChange={handleInputChange} 
+                                                required 
+                                            />
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="form-grid-2">
+                                        <div className="form-group">
+                                            <label>Thời gian mở bài <span className="text-danger">*</span></label>
+                                            <div className="premium-input-wrapper">
+                                                <Calendar size={20} className="input-icon" />
+                                                <input type="datetime-local" name="start_time" value={formData.start_time} onChange={handleInputChange} required />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Thời gian đóng bài <span className="text-danger">*</span></label>
+                                            <div className="premium-input-wrapper">
+                                                <Calendar size={20} className="input-icon" />
+                                                <input type="datetime-local" name="end_time" value={formData.end_time} onChange={handleInputChange} required />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Thời lượng (phút) <span className="text-danger">*</span></label>
+                                            <div className="premium-input-wrapper">
+                                                <Clock size={20} className="input-icon" />
+                                                <input type="number" name="duration_mins" value={formData.duration_mins} onChange={handleInputChange} min="1" required />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Số lần làm tối đa <span className="text-danger">*</span></label>
+                                            <div className="premium-input-wrapper">
+                                                <Shield size={20} className="input-icon" />
+                                                <input type="number" name="attempts_num" value={formData.attempts_num} onChange={handleInputChange} min="1" required />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Số lượng câu hỏi <span className="text-danger">*</span></label>
+                                            <div className="premium-input-wrapper">
+                                                <BookOpen size={20} className="input-icon" />
+                                                <input type="number" name="questions_num" value={formData.questions_num} onChange={handleInputChange} min="0" required />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

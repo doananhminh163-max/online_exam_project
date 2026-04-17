@@ -77,6 +77,22 @@
     color: #64748b;
 }
 
+.participation-badge {
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #dbeafe;
+}
+
+.participation-cell {
+    white-space: nowrap;
+}
+
 .action-col {
     text-align: right;
 }
@@ -123,12 +139,52 @@
 .modal-container.premium-modal {
     width: 95%;
     max-width: 850px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     border-radius: 28px;
     background: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15),
         0 0 0 1px rgba(15, 23, 42, 0.05);
     animation: modalSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.modal-body {
+    padding: 32px 50px;
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(79, 70, 229, 0.2) transparent;
+}
+
+/* Custom Scrollbar for Premium Modal */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 8px 0;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(79, 70, 229, 0.1);
+    border-radius: 20px;
+    border: 2px solid #ffffff;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(79, 70, 229, 0.25);
 }
 
 .modal-header {
@@ -138,6 +194,7 @@
     justify-content: space-between;
     align-items: flex-start;
     background: linear-gradient(to bottom right, #f8fafc, #ffffff);
+    flex-shrink: 0;
 }
 
 .modal-header-content h2 {
@@ -175,9 +232,6 @@
     transform: rotate(90deg);
 }
 
-.modal-form {
-    padding: 32px 50px 48px;
-}
 
 .form-sections {
     display: flex;
@@ -241,12 +295,13 @@
 }
 
 .modal-footer {
-    margin-top: 24px;
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    padding-top: 24px;
+    padding: 48px 50px 24px; /* Further increased top padding to push buttons lower */
     border-top: 1px solid #f1f5f9;
+    background: #ffffff;
+    flex-shrink: 0;
 }
 
 .btn-secondary-flat {

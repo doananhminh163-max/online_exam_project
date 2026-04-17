@@ -387,9 +387,17 @@ body {
   border-color: transparent;
 }
 
-.overview-grid .overview-card:nth-child(1) { animation-delay: 0.1s; }
-.overview-grid .overview-card:nth-child(2) { animation-delay: 0.2s; }
-.overview-grid .overview-card:nth-child(3) { animation-delay: 0.3s; }
+.overview-grid .overview-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.overview-grid .overview-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.overview-grid .overview-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
 
 .overview-card-top {
   display: flex;
@@ -468,9 +476,17 @@ body {
   transition: gap 0.3s ease;
 }
 
-.overview-blue .overview-link { color: #2563eb; }
-.overview-orange .overview-link { color: #ea580c; }
-.overview-purple .overview-link { color: #7c3aed; }
+.overview-blue .overview-link {
+  color: #2563eb;
+}
+
+.overview-orange .overview-link {
+  color: #ea580c;
+}
+
+.overview-purple .overview-link {
+  color: #7c3aed;
+}
 
 .overview-card:hover .overview-link {
   gap: 10px;
@@ -813,10 +829,32 @@ body {
   background: white;
   width: 90%;
   max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
   border-radius: 28px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
   animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(79, 70, 229, 0.2) transparent;
+}
+
+.modal-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-container::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 20px 0;
+}
+
+.modal-container::-webkit-scrollbar-thumb {
+  background: rgba(79, 70, 229, 0.1);
+  border-radius: 20px;
+  border: 2px solid #ffffff;
+}
+
+.modal-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 70, 229, 0.2);
 }
 
 .modal-header {

@@ -2,9 +2,19 @@ import { prisma } from '../../config/db.js';
 
 export const examService = {
   getAllExams: async () => {
-    return await prisma.exam.findMany({
+    const exams = await prisma.exam.findMany({
+      include: {
+        _count: {
+          select: { exam_attempts: true }
+        }
+      },
       orderBy: { id: 'desc' }
     });
+
+    return exams.map((exam: any) => ({
+      ...exam,
+      participants: exam._count.exam_attempts
+    }));
   },
 
   createExamRecord: async (data: { name: string; start_time: string; end_time: string; duration_mins: string | number; attempts_num?: string | number; questions_num?: string | number }) => {
