@@ -11,6 +11,7 @@ interface Exam {
     end_time: string;
     duration_mins: number;
     attempts_num: number;
+    questions_num: number;
 }
 
 export const TeacherExamManagement: React.FC = () => {
@@ -24,7 +25,8 @@ export const TeacherExamManagement: React.FC = () => {
         start_time: '',
         end_time: '',
         duration_mins: 60,
-        attempts_num: 1
+        attempts_num: 1,
+        questions_num: 10
     });
 
     useEffect(() => {
@@ -56,7 +58,8 @@ export const TeacherExamManagement: React.FC = () => {
                 start_time: exam.start_time.split('.')[0].slice(0, 16), // Format to datetime-local
                 end_time: exam.end_time.split('.')[0].slice(0, 16),
                 duration_mins: exam.duration_mins,
-                attempts_num: exam.attempts_num
+                attempts_num: exam.attempts_num,
+                questions_num: exam.questions_num || 0
             });
         } else {
             setEditingExam(null);
@@ -65,7 +68,8 @@ export const TeacherExamManagement: React.FC = () => {
                 start_time: '',
                 end_time: '',
                 duration_mins: 60,
-                attempts_num: 1
+                attempts_num: 1,
+                questions_num: 0
             });
         }
         setIsModalOpen(true);
@@ -130,10 +134,10 @@ export const TeacherExamManagement: React.FC = () => {
                             <table className="data-table">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
                                         <th>Tên Môn thi</th>
                                         <th>Thời gian</th>
                                         <th>Thời lượng</th>
+                                        <th>SỐ CÂU</th>
                                         <th>Lượt làm bài</th>
                                         <th className="action-col">Thao tác</th>
                                     </tr>
@@ -146,7 +150,6 @@ export const TeacherExamManagement: React.FC = () => {
                                     ) : (
                                         exams.map(exam => (
                                             <tr key={exam.id}>
-                                                <td>#{exam.id}</td>
                                                 <td className="font-semibold">{exam.name}</td>
                                                 <td>
                                                     <div className="time-col">
@@ -155,6 +158,7 @@ export const TeacherExamManagement: React.FC = () => {
                                                     </div>
                                                 </td>
                                                 <td><Clock size={14} className="inline-icon" /> {exam.duration_mins} phút</td>
+                                                <td><BookOpen size={14} className="inline-icon" /> {exam.questions_num} câu</td>
                                                 <td>{exam.attempts_num} lần</td>
                                                 <td>
                                                     <div className="action-buttons">
@@ -232,6 +236,13 @@ export const TeacherExamManagement: React.FC = () => {
                                         <div className="premium-input-wrapper">
                                             <Shield size={20} className="input-icon" />
                                             <input type="number" name="attempts_num" value={formData.attempts_num} onChange={handleInputChange} min="1" required />
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Số lượng câu hỏi <span className="text-danger">*</span></label>
+                                        <div className="premium-input-wrapper">
+                                            <BookOpen size={20} className="input-icon" />
+                                            <input type="number" name="questions_num" value={formData.questions_num} onChange={handleInputChange} min="0" required />
                                         </div>
                                     </div>
                                 </div>

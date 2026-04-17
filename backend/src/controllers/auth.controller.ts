@@ -38,7 +38,8 @@ export const login = async (req: Request, res: Response) => {
       user: {
         id: user.id,
         role: user.role,
-        full_name: user.full_name
+        full_name: user.full_name,
+        image: user.image
       }
     });
   } catch (error) {

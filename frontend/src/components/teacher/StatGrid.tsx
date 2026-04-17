@@ -1,27 +1,78 @@
-import React from 'react';
-import { BookOpen, Users, Database, Activity } from 'lucide-react';
-
-const stats = [
-  { title: "Môn thi đang có", value: "24", icon: BookOpen, trend: "+3 tháng này", color: "blue" },
-  { title: "Tổng Thí sinh", value: "850+", icon: Users, trend: "+12% so với kỳ trước", color: "purple" },
-  { title: "Ngân hàng câu hỏi", value: "4,200", icon: Database, trend: "+140 câu mới", color: "orange" },
-  { title: "Tỷ lệ Hoàn thành", value: "88%", icon: Activity, trend: "+2.4% tổng quan", color: "green" },
-];
+import React, { useEffect, useState } from 'react';
+import { BookOpen, Users, Database, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import api from '../../services/api';
 
 const StatGrid: React.FC = () => {
+  const [data, setData] = useState({
+    exams: 0,
+    students: 0,
+    questions: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await api.get('/admin/dashboard-stats');
+        setData(response.data);
+      } catch (error) {
+        console.error('Failed to fetch stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  const items = [
+    {
+      title: "Quản lý Môn thi",
+      description: "Tạo, chỉnh sửa và quản lý các môn thi trên hệ thống.",
+      stat: data.exams,
+      statLabel: "môn thi",
+      icon: BookOpen,
+      color: "blue",
+      link: "/teacher/exams"
+    },
+    {
+      title: "Ngân hàng câu hỏi",
+      description: "Quản lý và import câu hỏi cho các bài thi.",
+      stat: data.questions,
+      statLabel: "câu hỏi",
+      icon: Database,
+      color: "orange",
+      link: "/teacher/questions"
+    },
+    {
+      title: "Quản lý Thí sinh",
+      description: "Xem danh sách và quản lý tài khoản thí sinh.",
+      stat: data.students,
+      statLabel: "thí sinh",
+      icon: Users,
+      color: "purple",
+      link: "/teacher/students"
+    },
+  ];
+
   return (
-    <section className="stats-grid">
-      {stats.map((stat, idx) => (
-        <div className={`stat-card stat-${stat.color}`} key={idx}>
-          <div className="stat-icon-wrapper">
-            <stat.icon size={24} className="stat-icon" />
+    <section className="overview-grid">
+      {items.map((item, idx) => (
+        <Link to={item.link} className={`overview-card overview-${item.color}`} key={idx}>
+          <div className="overview-card-top">
+            <div className="overview-icon-wrapper">
+              <item.icon size={22} />
+            </div>
+            {!loading && (
+              <span className="overview-badge">{item.stat.toLocaleString()} {item.statLabel}</span>
+            )}
           </div>
-          <div className="stat-info">
-            <h3 className="stat-title">{stat.title}</h3>
-            <div className="stat-value">{stat.value}</div>
-            <span className="stat-trend">{stat.trend}</span>
-          </div>
-        </div>
+          <h3 className="overview-title">{item.title}</h3>
+          <p className="overview-desc">{item.description}</p>
+          <span className="overview-link">
+            Truy cập <ArrowRight size={14} />
+          </span>
+        </Link>
       ))}
     </section>
   );

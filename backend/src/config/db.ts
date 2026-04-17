@@ -1,6 +1,6 @@
+// Force reload Prisma Client
 import { PrismaClient } from "@prisma/client";
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
-import Database from 'better-sqlite3';
 import 'dotenv/config';
 
 const globalForPrisma = globalThis as unknown as {
@@ -16,7 +16,7 @@ const adapter = new PrismaBetterSqlite3({
 // Pass the adapter to PrismaClient
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({
   adapter,
-  log: ["query", "info", "warn", "error"],
+  log: ["error"],
 });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

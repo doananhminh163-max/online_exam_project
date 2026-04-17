@@ -22,6 +22,7 @@ app.set('views', './src/views');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static('public'));
 
 // init database
 initDatabase();
@@ -31,3 +32,4 @@ activateWebRoutes(app);
 const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+

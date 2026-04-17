@@ -1,10 +1,14 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import api from '../services/api';
 
 interface User {
   id: number;
   role: string;
   full_name: string;
+  code?: string;
+  email?: string;
+  image?: string;
 }
 
 interface AuthContextType {
@@ -12,6 +16,7 @@ interface AuthContextType {
   loading: boolean;
   login: (userData: User) => void;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -49,8 +54,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      const response = await api.get('/me');
+      setUser(response.data);
+    } catch (error) {
+      console.error('Refresh user failed:', error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

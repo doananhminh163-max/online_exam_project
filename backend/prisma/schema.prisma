@@ -20,6 +20,7 @@ model User {
   email     String @unique
   full_name String
   role      String
+  image     String?
 
   exam_attempts ExamAttempt[]
 
@@ -33,6 +34,7 @@ model Exam {
   end_time      DateTime
   duration_mins Int
   attempts_num  Int      @default(2)
+  questions_num Int      @default(0)
 
   questions     Question[]
   exam_attempts ExamAttempt[]

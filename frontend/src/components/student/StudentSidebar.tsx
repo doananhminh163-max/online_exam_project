@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Activity, CheckCircle, User, LogOut, ChevronUp } from 'lucide-react';
+import { Activity, CheckCircle, User, LogOut, ChevronUp } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
@@ -31,11 +31,6 @@ const StudentSidebar: React.FC = () => {
               <Activity size={20}/> <span>Tổng quan</span>
             </a>
           </li>
-          <li className={isActive('/student/exams') ? 'active' : ''}>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/student/exams'); }}>
-              <BookOpen size={20}/> <span>Kỳ thi của tôi</span>
-            </a>
-          </li>
           <li className={isActive('/student/results') ? 'active' : ''}>
             <a href="#" onClick={(e) => { e.preventDefault(); navigate('/student/results'); }}>
               <CheckCircle size={20}/> <span>Kết quả</span>
@@ -47,7 +42,7 @@ const StudentSidebar: React.FC = () => {
         <div className="profile-menu-container">
           {showMenu && (
             <div className="profile-dropdown">
-              <button className="dropdown-item">
+              <button className="dropdown-item" onClick={() => { setShowMenu(false); navigate('/student/profile'); }}>
                 <User size={18} />
                 <span>Trang cá nhân</span>
               </button>

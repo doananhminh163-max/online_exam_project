@@ -30,14 +30,14 @@ const TeacherSidebar: React.FC = () => {
           <li className={isActive('/teacher/exams')}><Link to="/teacher/exams"><BookOpen size={20}/> <span>Quản lý Môn thi</span></Link></li>
           <li className={isActive('/teacher/questions')}><Link to="/teacher/questions"><Database size={20}/> <span>Ngân hàng câu hỏi</span></Link></li>
           <li className={isActive('/teacher/students')}><Link to="/teacher/students"><Users size={20}/> <span>Thí sinh</span></Link></li>
-          <li><Link to="#reports"><TrendingUp size={20}/> <span>Báo cáo & Thống kê</span></Link></li>
+          <li className={isActive('/teacher/reports')}><Link to="/teacher/reports"><TrendingUp size={20}/> <span>Báo cáo & Thống kê</span></Link></li>
         </ul>
       </nav>
       <div className="sidebar-footer">
         <div className="profile-menu-container">
           {showMenu && (
             <div className="profile-dropdown">
-              <button className="dropdown-item">
+              <button className="dropdown-item" onClick={() => { setShowMenu(false); navigate('/teacher/profile'); }}>
                 <User size={18} />
                 <span>Trang cá nhân</span>
               </button>

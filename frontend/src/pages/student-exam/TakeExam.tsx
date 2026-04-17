@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import api from '../../services/api';
 import './TakeExam.css';
@@ -7,29 +7,40 @@ import './TakeExam.css';
 const TakeExam: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { attemptId, initialQuestions } = (location.state as any) || {};
   
   const [exam, setExam] = useState<any>(null);
-  const [questions, setQuestions] = useState<any[]>([]);
+  const [questions] = useState<any[]>(initialQuestions || []);
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    const fetchExam = async () => {
+    if (!attemptId) {
+      alert("Không tìm thấy lượt làm bài. Vui lòng bắt đầu lại từ bảng điều khiển.");
+      navigate('/student');
+      return;
+    }
+
+    const fetchExamInfo = async () => {
       try {
         const response = await api.get(`/student/exams/${id}`);
         setExam(response.data);
-        setQuestions(response.data.questions);
+        if (!initialQuestions) {
+          // Fallback fetch if state was lost on refresh (optional, but good for UX)
+          // For now, we rely on the state passed from dashboard
+        }
         setTimeLeft(response.data.duration_mins * 60);
       } catch (error) {
-        console.error('Failed to fetch exam:', error);
+        console.error('Failed to fetch exam info:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchExam();
-  }, [id]);
+    fetchExamInfo();
+  }, [id, attemptId, initialQuestions, navigate]);
 
   useEffect(() => {
     if (timeLeft <= 0 && !loading) return;
@@ -60,7 +71,10 @@ const TakeExam: React.FC = () => {
   const handleSubmit = async (isAuto = false) => {
     if (isAuto || window.confirm('Bạn có chắc chắn muốn nộp bài không?')) {
       try {
-        const response = await api.post(`/student/exams/${id}/submit`, { answers });
+        const response = await api.post(`/student/exams/${id}/submit`, { 
+          attemptId, 
+          answers 
+        });
         navigate(`/student/result/${response.data.attemptId}`);
       } catch (error) {
         console.error('Failed to submit exam:', error);
@@ -97,24 +111,27 @@ const TakeExam: React.FC = () => {
             <p className="question-content">{currentQ.content}</p>
             
             <div className="options-list">
-              {['option_a', 'option_b', 'option_c', 'option_d'].map((optKey) => (
-                <label 
-                  key={optKey} 
-                  className={`option-item ${answers[currentQ.id] === currentQ[optKey] ? 'selected' : ''}`}
-                >
-                  <div className="option-radio">
-                    <input 
-                      type="radio" 
-                      name={`q-${currentQ.id}`} 
-                      value={currentQ[optKey]}
-                      checked={answers[currentQ.id] === currentQ[optKey]}
-                      onChange={() => handleSelectOption(currentQ[optKey])}
-                    />
-                    <span className="radio-custom"></span>
-                  </div>
-                  <span className="option-text">{currentQ[optKey]}</span>
-                </label>
-              ))}
+              {['A', 'B', 'C', 'D'].map((optLetter) => {
+                const optKey = `option_${optLetter.toLowerCase()}` as 'option_a' | 'option_b' | 'option_c' | 'option_d';
+                return (
+                  <label 
+                    key={optLetter} 
+                    className={`option-item ${answers[currentQ.id] === optLetter ? 'selected' : ''}`}
+                  >
+                    <div className="option-radio">
+                      <input 
+                        type="radio" 
+                        name={`q-${currentQ.id}`} 
+                        value={optLetter}
+                        checked={answers[currentQ.id] === optLetter}
+                        onChange={() => handleSelectOption(optLetter)}
+                      />
+                      <span className="radio-custom"></span>
+                    </div>
+                    <span className="option-text">{currentQ[optKey]}</span>
+                  </label>
+                );
+              })}
             </div>
           </div>
 

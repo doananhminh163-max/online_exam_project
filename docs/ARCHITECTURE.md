@@ -34,6 +34,47 @@ graph TD
     H <--> I
 ```
 
+## Project Folder Structure
+```text
+ONLINE_EXAM_PROJECT/
+├── backend/                # Server-side source code (Node.js, Express)
+│   ├── prisma/             # Database configuration (Prisma ORM)
+│   └── src/                # Backend core logic
+│       ├── config/         # System configurations (DB, Seed)
+│       ├── controllers/    # Request handling (Admin & Client)
+│       ├── middleware/     # Intermediate processing layers (Auth, Validation)
+│       ├── routes/         # API route definitions
+│       ├── services/       # Business logic and DB interactions
+│       └── types/          # TypeScript type definitions
+├── frontend/               # Client-side source code (React, Vite)
+│   ├── public/             # Static assets and templates (CSV, Excel)
+│   └── src/                # Frontend core logic
+│       ├── components/     # Reusable UI components
+│       ├── context/        # App state management (AuthContext)
+│       ├── layouts/        # Page layout structures
+│       ├── pages/          # Main application pages
+│       └── services/       # API communication config (Axios)
+└── docs/                   # Documentation and system specifications
+```
+
+### Detailed Folder Descriptions
+
+#### **1. Backend (Server-side)**
+*   **`prisma/`**: Contains `schema.prisma` for SQLite table definitions and `migrations/` for database history.
+*   **`src/config/`**: Database connection setup and `seed.ts` for initial system data.
+*   **`src/controllers/`**: Handles API requests, extracts data, and calls corresponding services.
+    *   `admin/`: Manages exams, users, and data importing.
+    *   `client/`: Handles student-side exam processes.
+*   **`src/middleware/`**: Contains intermediate functions for authentication (`auth.ts`), file uploads (`multer.ts`), and data validation (`validation.ts`).
+*   **`src/services/`**: Core business logic (e.g., scoring, exam processing), isolating data handling from controllers.
+
+#### **2. Frontend (Client-side)**
+*   **`public/templates/`**: Template files (Excel/CSV) for bulk importing students and question banks.
+*   **`src/components/`**: Reusable UI components categorized by role (Student/Teacher).
+*   **`src/context/`**: Global state management, notably `AuthContext` for handling login/logout and session status.
+*   **`src/pages/`**: Each application page (Login, Dashboard, Exam) is contained within its own directory including logic (`.tsx`) and styling (`.css`).
+*   **`src/services/api.ts`**: Centralized Axios configuration for communicating with the Backend API.
+
 ## Frontend Architecture
 - **Framework:** React with TypeScript.
 - **Build Tool:** Vite.

@@ -137,7 +137,6 @@ const TeacherStudentManagement: React.FC = () => {
                 <div className="page-header">
                     <div className="header-title">
                         <h1>Quản lý Thí sinh</h1>
-                        <p>Theo dõi và quản lý tài khoản sinh viên trong hệ thống</p>
                     </div>
                     <div className="header-actions">
                         <button className="btn-secondary" onClick={handleExport}>

@@ -28,7 +28,7 @@ export const TeacherDashboard: React.FC = () => {
         {/* Header Component */}
         <DashboardHeader />
 
-        {/* Thống kê Tổng quan (Stats Component) */}
+        {/* Overview Info Boxes */}
         <StatGrid />
 
         {/* Nội dung chi tiết */}

@@ -26,20 +26,21 @@
 
 .data-table th {
     background-color: #f8fafc;
-    padding: 16px;
+    padding: 12px 16px;
     font-weight: 600;
     color: #475569;
     border-bottom: 1px solid #e2e8f0;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .data-table td {
-    padding: 16px;
+    padding: 12px 16px;
     border-bottom: 1px solid #f1f5f9;
     vertical-align: middle;
     color: #334155;
+    font-size: 0.9rem;
 }
 
 .data-table tbody tr:hover {
@@ -49,7 +50,7 @@
 .font-semibold {
     font-weight: 600;
     color: #0f172a;
-    font-size: 1.05rem;
+    font-size: 0.95rem;
 }
 
 .time-col {
@@ -62,12 +63,12 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
 .text-muted {
     color: #64748b;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
 }
 
 .inline-icon {
@@ -102,6 +103,7 @@
     color: #3b82f6;
     background-color: rgba(59, 130, 246, 0.1);
 }
+
 .btn-icon.edit:hover {
     background-color: rgb(59, 130, 246);
     color: white;
@@ -111,6 +113,7 @@
     color: #ef4444;
     background-color: rgba(239, 68, 68, 0.1);
 }
+
 .btn-icon.delete:hover {
     background-color: rgb(239, 68, 68);
     color: white;
@@ -123,8 +126,8 @@
     border-radius: 28px;
     background: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15), 
-                0 0 0 1px rgba(15, 23, 42, 0.05);
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15),
+        0 0 0 1px rgba(15, 23, 42, 0.05);
     animation: modalSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -220,7 +223,7 @@
     box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
 }
 
-.premium-input-wrapper input:focus + .input-icon {
+.premium-input-wrapper input:focus+.input-icon {
     color: #4f46e5;
 }
 
@@ -290,8 +293,15 @@
 }
 
 @keyframes modalSlideUp {
-    from { opacity: 0; transform: translateY(40px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 /* Responsiveness for modal */

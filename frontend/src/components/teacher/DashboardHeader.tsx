@@ -1,15 +1,14 @@
 import React from 'react';
+import { useAuth } from '../../context/AuthContext';
 
-interface DashboardHeaderProps {
-  // onCreateClick: () => void; (Removed as per user request)
-}
+const DashboardHeader: React.FC = () => {
+  const { user } = useAuth();
+  const teacherName = user?.full_name || 'Giảng viên';
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
   return (
     <header className="main-header">
       <div className="header-greeting">
-        <h1>Chào mừng trở lại, Thầy A 👋</h1>
-        <p>Đây là tổng quan về tình hình các học phần và môn thi hôm nay.</p>
+        <h1>Chào mừng trở lại, {teacherName} 👋</h1>
       </div>
     </header>
   );

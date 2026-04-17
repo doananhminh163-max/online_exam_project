@@ -110,8 +110,8 @@ const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, type }) => {
     onClose();
   };
 
-  const csvLink = type === 'questions' ? '/templates/mau_nhap_cau_hoi.csv' : '/templates/student_example.csv';
-  const excelLink = type === 'questions' ? '/templates/mau_nhap_cau_hoi.xlsx' : '/templates/student_example.xlsx';
+  const csvLink = type === 'questions' ? '/templates/question_bank_example.csv' : '/templates/student_example.csv';
+  const excelLink = type === 'questions' ? '/templates/question_bank_example.xlsx' : '/templates/student_example.xlsx';
 
   return (
     <div className="modal-overlay">

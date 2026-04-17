@@ -113,30 +113,70 @@ export const importQuestions = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'Không tìm thấy Môn thi' });
         }
 
-        const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+        // Cache map để lưu lookup đỡ tốn call DB nhiều lần (tận dụng name là unique attribute)
+        const examNameCache = new Map<string, number>();
+
+        let workbook;
+        if (req.file.originalname.toLowerCase().endsWith('.csv')) {
+            const csvString = req.file.buffer.toString('utf8');
+            workbook = xlsx.read(csvString, { type: 'string' });
+        } else {
+            workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
+        }
         const sheetName = workbook.SheetNames[0];
-        const data = xlsx.utils.sheet_to_json<any>(workbook.Sheets[sheetName]);
+        const data = xlsx.utils.sheet_to_json<any[]>(workbook.Sheets[sheetName], { header: 1 });
+        
+        // Skip header row
+        const rows = data.slice(1);
 
         const errors: any[] = [];
         const questionsToInsert: any[] = [];
 
-        for (let i = 0; i < data.length; i++) {
-            const row = data[i];
-            const content = row['Nội dung'] || row['content'] || row['Question'];
-            const optionA = row['A'] || row['Option A'] || row['option_a'];
-            const optionB = row['B'] || row['Option B'] || row['option_b'];
-            const optionC = row['C'] || row['Option C'] || row['option_c'];
-            const optionD = row['D'] || row['Option D'] || row['option_d'];
-            const answer = row['Đáp án'] || row['Answer'] || row['answer'];
-            const explain = row['Giải thích'] || row['Explain'] || row['explain'] || '';
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            if (row.length === 0) continue; // Skip empty rows
 
-            if (!content || !optionA || !optionB || !optionC || !optionD || !answer) {
+            // Expected columns: Exam Name (0), Content (1), A (2), B (3), C (4), D (5), Answer (6), Explain (7)
+            const examName = row[0];
+            const content = row[1];
+            const optionA = row[2];
+            const optionB = row[3];
+            const optionC = row[4];
+            const optionD = row[5];
+            const answer = row[6];
+            const explain = row[7] || '';
+
+            // Nếu trong file chỉ định tên môn thi, tìm ID của môn thi đó.
+            // Nếu không, fallback về examId đã chọn trong dropdown.
+            let currentExamId = examId;
+            if (examName) {
+                const examNameStr = examName.toString().trim();
+                if (examNameCache.has(examNameStr)) {
+                    currentExamId = examNameCache.get(examNameStr)!;
+                } else {
+                    // Do 'name' là @unique nên ta có thể dùng findUnique cho tốc độ tối đa
+                    const foundExam = await prisma.exam.findUnique({
+                        where: { name: examNameStr }
+                    });
+                    if (foundExam) {
+                        examNameCache.set(examNameStr, foundExam.id);
+                        currentExamId = foundExam.id;
+                    } else {
+                        errors.push({ row: i + 2, reason: `Không tìm thấy môn thi có tên: "${examName}"` });
+                        continue;
+                    }
+                }
+            }
+
+            const isMissing = (val: any) => val === undefined || val === null || val === '';
+
+            if (isMissing(content) || isMissing(optionA) || isMissing(optionB) || isMissing(optionC) || isMissing(optionD) || isMissing(answer)) {
                 errors.push({ row: i + 2, reason: 'Thiếu dữ liệu nội dung, 4 đáp án hoặc đáp án đúng' });
                 continue;
             }
 
             questionsToInsert.push({
-                exam_id: examId,
+                exam_id: currentExamId,
                 content: content.toString(),
                 option_a: optionA.toString(),
                 option_b: optionB.toString(),

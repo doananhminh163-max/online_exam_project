@@ -12,14 +12,14 @@ export const getExams = async (req: Request, res: Response, next: NextFunction) 
 
 export const createExam = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { name, start_time, end_time, duration_mins, attempts_num } = req.body;
+        const { name, start_time, end_time, duration_mins, attempts_num, questions_num } = req.body;
         
         // Basic validation
         if (!name || !start_time || !end_time || !duration_mins) {
             return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin bắt buộc' });
         }
 
-        const newExam = await examService.createExamRecord({ name, start_time, end_time, duration_mins, attempts_num });
+        const newExam = await examService.createExamRecord({ name, start_time, end_time, duration_mins, attempts_num, questions_num });
 
         res.status(201).json(newExam);
     } catch (error) {
@@ -30,9 +30,9 @@ export const createExam = async (req: Request, res: Response, next: NextFunction
 export const updateExam = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-        const { name, start_time, end_time, duration_mins, attempts_num } = req.body;
+        const { name, start_time, end_time, duration_mins, attempts_num, questions_num } = req.body;
 
-        const updatedExam = await examService.updateExamRecord(parseInt(id as string), { name, start_time, end_time, duration_mins, attempts_num });
+        const updatedExam = await examService.updateExamRecord(parseInt(id as string), { name, start_time, end_time, duration_mins, attempts_num, questions_num });
 
         res.json(updatedExam);
     } catch (error) {
@@ -47,6 +47,15 @@ export const deleteExam = async (req: Request, res: Response, next: NextFunction
         await examService.deleteExamRecord(parseInt(id as string));
 
         res.json({ message: 'Xóa môn thi thành công' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getStats = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const stats = await examService.getDashboardStats();
+        res.json(stats);
     } catch (error) {
         next(error);
     }
